@@ -1,0 +1,36 @@
+<template>
+  <div id="pageDashboard">
+    <v-container grid-list-xl fluid>
+      <v-layout row wrap>            
+      </v-layout>
+    </v-container>
+  </div>
+</template>
+
+<script>
+import API from '@/api';
+import EChart from '@/components/chart/echart';
+import MiniStatistic from '@/components/widgets/statistic/MiniStatistic';
+import PlainTable from '@/components/widgets/list/PlainTable';
+import Material from 'vuetify/es5/util/colors';
+import BoxChart from '@/components/widgets/chart/BoxChart';
+import CircleStatistic from '@/components/widgets/statistic/CircleStatistic';
+import LinearStatistic from '@/components/widgets/statistic/LinearStatistic';
+export default {
+  components: {
+    MiniStatistic,
+    EChart,
+    BoxChart,
+    CircleStatistic,
+    LinearStatistic,
+    PlainTable,
+  },
+  data: () => ({
+    color: Material,
+    selectedTab: 'tab-1',  
+  }),
+  computed: {
+  },
+
+};
+</script>

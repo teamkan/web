@@ -10,7 +10,7 @@
       <v-toolbar-side-icon @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
       <v-spacer></v-spacer>
       <v-btn icon @click="logout">
-        <v-icon>fullscreen</v-icon>
+        <v-icon>exit_to_app</v-icon>
       </v-btn>
   </v-toolbar>
 </template>

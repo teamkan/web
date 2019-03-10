@@ -10,10 +10,10 @@ import Axios from 'axios'
 
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('token')
-Axios.defaults.baseURL = 'http://localhost:8080';
+Axios.defaults.baseURL = 'http://localhost:8080/api';
 
 if (token) {
-  Vue.prototype.$http.defaults.headers.common['Authorization'] = token
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token
 }
 
 Vue.config.productionTip = false;

@@ -4,11 +4,13 @@ import axios from 'axios'
 
 Vue.use(Vuex);
 
+const baseUrl = 'http://localhost:8080/';
+
 export default new Vuex.Store({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
-    user : {}
+    user : localStorage.getItem('user') || {}
   },
   mutations: {
     auth_request(state){
@@ -31,10 +33,12 @@ export default new Vuex.Store({
     login({commit}, user){
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios({url: '/public/login', data: user, method: 'POST' })
+        axios({url: baseUrl + 'authenticate', data: user, method: 'POST' })
         .then(resp => {
           const token = resp.data.token
           const user = resp.data.user
+          localStorage.setItem('user', user)
+          localStorage.setItem('roleId', user.roleId)
           localStorage.setItem('token', token)
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
           commit('auth_success', token, user)
@@ -50,7 +54,9 @@ export default new Vuex.Store({
     logout({commit}){
       return new Promise((resolve, reject) => {
         commit('logout')
+        localStorage.removeItem('user')
         localStorage.removeItem('token')
+        localStorage.removeItem('roleId')
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })

@@ -40,7 +40,7 @@
       </transition>
     </template>
     <v-snackbar
-      :timeout="3000"
+      :timeout="5000"
       top
       right
       :color="snackbar.color"

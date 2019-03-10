@@ -17,6 +17,7 @@
 
 <script>
 import menu from '@/api/menu';
+import adminMenu from '@/api/adminMenu';
 export default {
   data () {
     return {
@@ -27,6 +28,23 @@ export default {
     breadcrumbs: function () {
       let breadcrumbs = [];
       menu.forEach(item => {
+        if (item.items) {
+          let child =  item.items.find(i => {
+            return i.component === this.$route.name;
+          });
+          if (child) {
+            breadcrumbs.push(item.title);
+            breadcrumbs.push(child.title);
+            this.title = child.title;
+          }
+        } else {
+          if (item.name === this.$route.name) {
+            this.title = item.title;
+            breadcrumbs.push(item.title);
+          }
+        }
+      });
+      adminMenu.forEach(item => {
         if (item.items) {
           let child =  item.items.find(i => {
             return i.component === this.$route.name;

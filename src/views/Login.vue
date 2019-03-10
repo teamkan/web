@@ -50,7 +50,7 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          window.getApp.$emit('DISPLAY_SNACK', 'Invalid username or password.', 'red');
+          window.getApp.$emit('DISPLAY_SNACK', err.response.data.msg, 'red');
         })
     }
   }

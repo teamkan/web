@@ -73,4 +73,16 @@ export default [
       `@/views/Dashboard.vue`
     )
   },
+  {
+    path: '/admin/users',
+    meta: { 
+      breadcrumb: true,
+      requiresAuth: true 
+    },
+    name: 'Users',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/Admin/Users.vue`
+    )
+  },
 ];

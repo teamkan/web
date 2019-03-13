@@ -9,12 +9,18 @@
     </v-toolbar-title>
       <v-toolbar-side-icon @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
       <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-btn flat>
+          {{  username }}
+        </v-btn>   
+      </v-toolbar-items>
       <v-btn icon @click="logout">
         <v-icon>exit_to_app</v-icon>
       </v-btn>
   </v-toolbar>
 </template>
 <script>
+import store from '@/store';
 export default {
   name: 'app-toolbar',
   components: {
@@ -22,6 +28,9 @@ export default {
   computed: {
     toolbarColor () {
       return this.$vuetify.options.extra.mainNav;
+    },
+    username() {
+      return JSON.parse(localStorage.getItem('user')).username
     }
   },
   methods: {

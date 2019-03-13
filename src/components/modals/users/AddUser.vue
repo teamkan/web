@@ -29,6 +29,14 @@
             <v-flex xs12>
               <v-text-field label="Lastname" v-model="user.lastname" required autocomplete="off"></v-text-field>
             </v-flex>
+            <v-flex xs12>
+                <v-select   label="Role" 
+                            placeholder="Select role"
+                            :items="roles"
+                            item-text="name"
+                            item-value="id"
+                            v-model="user.roleId"></v-select>
+            </v-flex>
           </v-layout>
         </v-container>
       </v-card-text>
@@ -48,6 +56,7 @@ export default {
   props: {
     modal: Object,
     icon: String,
+    roles: Array,
   },
   data: () => ({
     user: {
@@ -57,6 +66,7 @@ export default {
       email: '',
       firstname: '',
       lastname: '',
+      roleId: -1,
     },
     loading: false
   }),
@@ -69,6 +79,7 @@ export default {
       let email = this.user.email;
       let firstname = this.user.firstname;
       let lastname = this.user.lastname;
+      let roleId = this.user.roleId;
 
       if(username === '' || password === '' || password2 === '' || email === '' || firstname === '' || lastname === '') {
         window.getApp.$emit('DISPLAY_SNACK', "All fields must be provided.", 'red');
@@ -80,6 +91,11 @@ export default {
         return;
       }
 
+      if(roleId === -1) {
+        window.getApp.$emit('DISPLAY_SNACK', "Role must be selected.", 'red');
+        return;
+      }
+
       let user = {
         'username': username, 
         'password': password, 
@@ -87,6 +103,7 @@ export default {
         'email': email, 
         'firstname': firstname,
         'lastname': lastname,   
+        'roleId': roleId,   
       }
 
       UserService.addUser(user)
@@ -114,6 +131,7 @@ export default {
       this.user.email = '';
       this.user.firstname = '';
       this.user.lastname = '';
+      this.user.roleId = -1;
     }
   }
 };

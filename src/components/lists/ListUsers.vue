@@ -4,8 +4,9 @@
       <v-toolbar-title><h4>Users</h4></v-toolbar-title>
       <v-spacer></v-spacer>
         <add-user v-bind:modal="addDialog"
-                    icon="add"
-                    v-on:added="getUsers">
+                  icon="add"
+                  v-on:added="getUsers"
+                  v-bind:roles="roles">
         </add-user>
 
     </v-toolbar>
@@ -22,6 +23,7 @@
             <td>{{ props.item.email }}</td>
             <td>{{ props.item.firstname }}</td>
             <td>{{ props.item.lastname }}</td>
+            <td>{{ props.item.role.name }}</td>
           </template>
         </v-data-table>
       </template>
@@ -32,6 +34,7 @@
 
 <script>
 import UserService from '@/api/users'
+import RoleService from '@/api/roles'
 import AddUser from '@/components/modals/users/AddUser';
 import store from '@/store';
 export default {
@@ -69,12 +72,18 @@ export default {
           align: 'left',
           value: 'lastname'
         },
+        {
+          text: 'Role',
+          align: 'left',
+          value: 'rolename'
+        },
       ],
       users: [],
+      roles: [],
       pagination: {
         descending: false,
         rowsPerPage: 10,
-        sortBy: 'buildingName'
+        sortBy: 'id'
       },
       addDialog: {
         dialog: false
@@ -83,6 +92,7 @@ export default {
   },
   created: function() {
       this.getUsers();
+      this.getRoles();
   },
   methods: {
       getUsers() {
@@ -90,6 +100,12 @@ export default {
             .then(users => {
                 this.users = users;
             })
+      },
+      getRoles() {
+        RoleService.getRoles()
+          .then(roles => {
+            this.roles = roles;
+          });
       }
   }
 };

@@ -85,4 +85,16 @@ export default [
       `@/views/Admin/Users.vue`
     )
   },
+  {
+    path: '/admin/projects',
+    meta: { 
+      breadcrumb: true,
+      requiresAuth: true 
+    },
+    name: 'Projects',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/Admin/Projects.vue`
+    )
+  },
 ];

@@ -6,6 +6,12 @@ const Menu =  [
     icon: 'people',
     name: 'Users',
   },
+  {
+    title: 'Projects',
+    group: 'admin',
+    icon: 'people',
+    name: 'Projects',
+  },
 ];
 // reorder menu
 Menu.forEach((item) => {

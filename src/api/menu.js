@@ -6,6 +6,12 @@ const Menu =  [
     icon: 'dashboard',
     name: 'Dashboard',
   },
+  {
+    title: 'Projects',
+    group: 'apps',
+    icon: 'tab',
+    name: 'Projects',
+  },
 ];
 // reorder menu
 Menu.forEach((item) => {

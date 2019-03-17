@@ -11,13 +11,12 @@
 </template>
 
 <script>
-import ListProjects from '@/components/lists/ListProjects';
+import ListProjects from '@/components/lists/admin/ListProjects';
 export default {
   components: {
     ListProjects,
   },
   data: () => ({
-    selectedTab: 'tab-1',  
   }),
   computed: {
   },

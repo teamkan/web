@@ -9,8 +9,8 @@ const Menu =  [
   {
     title: 'Projects',
     group: 'admin',
-    icon: 'people',
-    name: 'Projects',
+    icon: 'note',
+    name: 'AdminProjects',
   },
 ];
 // reorder menu

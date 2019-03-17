@@ -3,11 +3,6 @@
     <v-toolbar card dense color="transparent">
       <v-toolbar-title><h4>Projects</h4></v-toolbar-title>
       <v-spacer></v-spacer>
-      <add-project v-bind:modal="addDialog"
-                icon="add"
-                v-bind:users="users"
-                v-on:added="getProjects">
-      </add-project>
     </v-toolbar>
     <v-divider></v-divider>
     <v-card-text class="pa-0">
@@ -17,8 +12,9 @@
                       :pagination.sync="pagination"
                       class="elevation-0">
           <template slot="items" slot-scope="props">
-            <td>{{ props.item.id }}</td>
-            <td>{{ props.item.name }}</td>
+            <td>{{ props.item.project.id }}</td>
+            <td>{{ props.item.project.name }}</td>
+            <td>{{ projectRole(props.item.roleId) }}</td>
             <td class="text-xs-right">
                 <edit-project v-bind:modal="getEditDialog(props.item.id)"
                               icon="edit"
@@ -68,6 +64,11 @@ export default {
           align: 'left',
           value: 'name'
         },
+        {
+          text: 'Role',
+          align: 'left',
+          value: 'roleId'
+        },
         { text: 'Actions', value: 'action', align: 'right' },
       ],
       projects: [],
@@ -82,11 +83,13 @@ export default {
       addDialog: {
         dialog: false
       },
+      userId: JSON.parse(localStorage.getItem('user')).id
     }
   },
+  computed: {
+  },
   created: function() {
-      this.getProjects();
-      this.getUsers();
+      this.getUserProjects();
   },
   methods: {
       getProjects() {

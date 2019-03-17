@@ -33,5 +33,17 @@ export default {
       .then(resp => {
         return resp.data.projects;
       });
-  }
+  },
+  getUserProjects(userId) {
+    return axios.get('projects/users/filter?userId=' + userId)
+      .then(resp => {
+        return resp.data.userProjects;
+      });
+  },
+  getProjectById(projectId) {
+    return axios.get('projects/filter?projectId=' + projectId)
+      .then(resp => {
+        return resp.data.projects[0];
+      });
+  },
 }

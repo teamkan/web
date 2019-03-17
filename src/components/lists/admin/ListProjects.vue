@@ -3,6 +3,11 @@
     <v-toolbar card dense color="transparent">
       <v-toolbar-title><h4>Projects</h4></v-toolbar-title>
       <v-spacer></v-spacer>
+      <add-project v-bind:modal="addDialog"
+                icon="add"
+                v-bind:users="users"
+                v-on:added="getProjects">
+      </add-project>
     </v-toolbar>
     <v-divider></v-divider>
     <v-card-text class="pa-0">
@@ -12,12 +17,14 @@
                       :pagination.sync="pagination"
                       class="elevation-0">
           <template slot="items" slot-scope="props">
-            <td>{{ props.item.project.id }}</td>
-            <td>{{ props.item.project.name }}</td>
-            <td>{{ projectRole(props.item.roleId) }}</td>
+            <td>{{ props.item.id }}</td>
+            <td>{{ props.item.name }}</td>
             <td class="text-xs-right">
-                <v-btn flat icon color="teal darken-3" @click.native="openProject(props.item.project.id)">
-                  <v-icon>search</v-icon>
+                <v-btn flat icon color="blue">
+                  <v-icon>edit</v-icon>
+                </v-btn>
+                <v-btn flat icon color="red">
+                  <v-icon>delete</v-icon>
                 </v-btn>
               </td>
           </template>
@@ -53,14 +60,10 @@ export default {
           align: 'left',
           value: 'name'
         },
-        {
-          text: 'Role',
-          align: 'left',
-          value: 'roleId'
-        },
         { text: 'Actions', value: 'action', align: 'right' },
       ],
       projects: [],
+      users: [],
       pagination: {
         descending: false,
         rowsPerPage: 10,
@@ -69,28 +72,25 @@ export default {
       addDialog: {
         dialog: false
       },
-      userId: JSON.parse(localStorage.getItem('user')).id
     }
   },
-  computed: {
-  },
   created: function() {
-      this.getUserProjects();
+      this.getProjects();
+      this.getUsers();
   },
   methods: {
-    getUserProjects() {
-      ProjectService.getUserProjects(this.userId)
-          .then(projects => {
-              this.projects = projects;
-          })
-    },
-    projectRole(role) {
-      return role == 'project_owner' ? 'Product owner' : role == 'scrum_master' ? 'Scrum master' : role == 'developer' ? 'Developer' : 'Standard'
-    },
-    openProject(projectId) {
-      this.$router.push({name: 'Project', params: {id: projectId}});
-    },
-
+      getProjects() {
+        ProjectService.getProjects()
+            .then(projects => {
+                this.projects = projects;
+            })
+      },
+      getUsers() {
+        UserService.getUsers()
+          .then(users => {
+            this.users = users;
+          });
+      }
   }
 };
 </script>

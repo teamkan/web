@@ -74,6 +74,31 @@ export default [
     )
   },
   {
+    path: '/projects',
+    meta: { 
+      breadcrumb: true,
+      requiresAuth: true 
+    },
+    name: 'Projects',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/Project/Projects.vue`
+    )
+  },
+  {
+    path: '/projects/:id',
+    meta: { 
+      breadcrumb: false,
+      requiresAuth: true
+    },
+    name: 'Project',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/Project/Project.vue`
+    )
+  },
+
+  {
     path: '/admin/users',
     meta: { 
       breadcrumb: true,
@@ -91,7 +116,7 @@ export default [
       breadcrumb: true,
       requiresAuth: true 
     },
-    name: 'Projects',
+    name: 'AdminProjects',
     component: () => import(
       /* webpackChunkName: "routes" */
       `@/views/Admin/Projects.vue`

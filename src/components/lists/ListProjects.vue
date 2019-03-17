@@ -2,11 +2,11 @@
   <v-card>
     <v-toolbar card dense color="transparent">
       <v-toolbar-title><h4>Projects</h4></v-toolbar-title>
-       <add-project v-bind:modal="addDialog"
-                  icon="add"
-                  v-bind:users="users">
-        </add-project>
-
+      <v-spacer></v-spacer>
+      <add-project v-bind:modal="addDialog"
+                icon="add"
+                v-bind:users="users">
+      </add-project>
     </v-toolbar>
     <v-divider></v-divider>
     <v-card-text class="pa-0">
@@ -14,13 +14,12 @@
         <v-data-table :headers="headers"
                       :items="projects"
                       :pagination.sync="pagination"
-                      class="elevation-0"
-                      @select="selected">
+                      class="elevation-0">
           <template slot="items" slot-scope="props">
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.name }}</td>
             <td class="text-xs-right">
-                <v-btn flat icon color="grey">
+                <v-btn flat icon color="blue">
                   <v-icon>edit</v-icon>
                 </v-btn>
                 <v-btn flat icon color="red">
@@ -39,7 +38,7 @@
 import ProjectService from '@/api/projects'
 import RoleService from '@/api/roles'
 import UserService from '@/api/users'
-import AddProject from '@/components/modals/users/AddProject';
+import AddProject from '@/components/modals/projects/AddProject';
 import store from '@/store';
 export default {
   components: {
@@ -60,7 +59,8 @@ export default {
           text: 'Project name',
           align: 'left',
           value: 'name'
-        }
+        },
+        { text: 'Actions', value: 'action', align: 'right' },
       ],
       projects: [],
       users: [],

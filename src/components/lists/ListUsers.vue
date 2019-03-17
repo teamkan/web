@@ -24,6 +24,14 @@
             <td>{{ props.item.firstname }}</td>
             <td>{{ props.item.lastname }}</td>
             <td>{{ props.item.role.name }}</td>
+            <td class="text-xs-right">
+              <v-btn flat icon color="blue">
+                <v-icon>edit</v-icon>
+              </v-btn>
+              <v-btn flat icon color="red">
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </td>
           </template>
         </v-data-table>
       </template>
@@ -77,6 +85,7 @@ export default {
           align: 'left',
           value: 'rolename'
         },
+        { text: 'Actions', value: 'action', align: 'right' },
       ],
       users: [],
       roles: [],

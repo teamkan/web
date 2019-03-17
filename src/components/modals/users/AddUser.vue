@@ -43,7 +43,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="red" flat @click.native="close" :disabled="loading">Close</v-btn>
-        <v-btn color="green" flat @click.native="save">Save</v-btn>
+        <v-btn color="green" flat @click.native="save" :loading="loading">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>  

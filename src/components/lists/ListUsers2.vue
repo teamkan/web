@@ -89,6 +89,7 @@ export default {
   },
   data: function () {
     return {
+      isRequired: true,
       pagination: {
         sortBy: 'name'
       },

@@ -18,13 +18,20 @@ export default {
   addProject(project) {
     return axios.post('Projects', project)
       .then(resp => {
-        return resp;
+        return resp.data.project;
       });
   },
-  assignUserToProject(project) {
-    return axios.post('UserProjects', project)
+  assignUserToProject(projectUser) {
+    return axios.post('Projects/AssignUser', projectUser)
       .then(resp => {
         return resp;
       });
   },
+
+  getProjectByName(projectName) {
+    return axios.get('projects/filter?projectName=' + projectName)
+      .then(resp => {
+        return resp.data.projects;
+      });
+  }
 }

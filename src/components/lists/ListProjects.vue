@@ -5,7 +5,8 @@
       <v-spacer></v-spacer>
       <add-project v-bind:modal="addDialog"
                 icon="add"
-                v-bind:users="users">
+                v-bind:users="users"
+                v-on:added="getProjects">
       </add-project>
     </v-toolbar>
     <v-divider></v-divider>
@@ -36,7 +37,6 @@
 
 <script>
 import ProjectService from '@/api/projects'
-import RoleService from '@/api/roles'
 import UserService from '@/api/users'
 import AddProject from '@/components/modals/projects/AddProject';
 import store from '@/store';
@@ -64,7 +64,6 @@ export default {
       ],
       projects: [],
       users: [],
-      roles: [],
       pagination: {
         descending: false,
         rowsPerPage: 10,
@@ -77,7 +76,6 @@ export default {
   },
   created: function() {
       this.getProjects();
-      this.getRoles();
       this.getUsers();
   },
   methods: {
@@ -86,12 +84,6 @@ export default {
             .then(projects => {
                 this.projects = projects;
             })
-      },
-      getRoles() {
-        RoleService.getRoles()
-          .then(roles => {
-            this.roles = roles;
-          });
       },
       getUsers() {
         UserService.getUsers()

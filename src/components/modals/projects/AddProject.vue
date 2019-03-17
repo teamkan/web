@@ -169,12 +169,21 @@ export default {
       }
 
       ProjectService.addProject({ 'name': name, })
-        .then(resp => {
-          this.clearFields();
-          step = 2;
+        .then(project => {
+          this.selectedUsers.forEach(user => {
+            const _user = {
+              'projectId' : project.id,
+              'userId' : user.id,
+              'roleId' : user.id == this.selectedProjectOwner ? 'project_owner' : user.id == this.selectedScrumMaster ? 'scrum_master' : user.id == this.selectedDeveloper ? 'developer' : 'standard' 
+            }
 
+            ProjectService.assignUserToProject(_user)
+              .then(resp => {});
+          });
+
+          this.clearFields();
+          this.modal.dialog = false;
           this.$emit('added');
-          
         })
         .catch(err => {
           window.getApp.$emit('DISPLAY_SNACK', err.response.data.msg, 'red');
@@ -187,6 +196,7 @@ export default {
     clearFields() {
       this.project.name = '';
       this.selectedUsers = [];
+      this.step = 1;
     },
     nextStep() {
       if(this.project.name === '') {
@@ -194,7 +204,16 @@ export default {
         return;
       }
 
-      this.step = 2;
+      ProjectService.getProjectByName(this.project.name)
+        .then(projects => {
+          console.log('Got projects');
+          console.log(projects);
+
+          if (projects.length == 0)
+            this.step = 2;
+          else 
+            window.getApp.$emit('DISPLAY_SNACK', "Project name must be unique.", 'red');
+        });
     },
     previousStep() {
       this.step = 1;

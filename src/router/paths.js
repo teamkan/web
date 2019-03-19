@@ -84,6 +84,18 @@ export default [
       /* webpackChunkName: "routes" */
       `@/views/Project/Projects.vue`
     )
+    },
+  {
+    path: '/sprints',
+    meta: { 
+      breadcrumb: true,
+      requiresAuth: true 
+    },
+    name: 'Sprints',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/Sprint/Sprints.vue`
+    )
   },
   {
     path: '/projects/:id',
@@ -120,6 +132,18 @@ export default [
     component: () => import(
       /* webpackChunkName: "routes" */
       `@/views/Admin/Projects.vue`
+    )
+    },
+  {
+    path: '/admin/sprints',
+    meta: { 
+      breadcrumb: true,
+      requiresAuth: true 
+    },
+    name: 'AdminSprints',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/Admin/Sprints.vue`
     )
   },
 ];

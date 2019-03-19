@@ -30,7 +30,16 @@
             color="blue darken-2"      
           >
           </mini-statistic>           
-        </v-flex>           
+        </v-flex> 
+        <v-flex sm6 xs12>
+          <mini-statistic
+            icon="date_range"
+            :title="sprintCount"
+            sub-title="Sprints"
+            color="orange darken-2"      
+          >
+          </mini-statistic>           
+        </v-flex>  
       </v-layout>
     </v-container>
   </div>
@@ -48,6 +57,7 @@ import LinearStatistic from '@/components/widgets/statistic/LinearStatistic';
 
 import UserService from '@/api/users'
 import ProjectService from '@/api/projects'
+import SprintService from '@/api/sprints'
 
 export default {
   components: {
@@ -63,7 +73,8 @@ export default {
     selectedTab: 'tab-1',  
     userCount: 0,
     projectCount: 0,
-    userProjectCount: 0,
+      userProjectCount: 0,
+    sprintCount: 0,
     userId: JSON.parse(localStorage.getItem('user')).id
   }),
   computed: {
@@ -80,10 +91,14 @@ export default {
       .then(users => {
         this.userCount = users.length;
       });
-    ProjectService.getUserProjects(this.userId)
-      .then(projects => {
-          this.userProjectCount = projects.length;
-      })
+      ProjectService.getUserProjects(this.userId)
+          .then(projects => {
+              this.userProjectCount = projects.length;
+          });
+      SprintService.getSprints()
+          .then(sprints => {
+              this.sprintCount = sprints.length;
+          });
   }
 };
 </script>

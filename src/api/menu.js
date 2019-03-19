@@ -11,6 +11,12 @@ const Menu =  [
     group: 'apps',
     icon: 'tab',
     name: 'Projects',
+    },
+  {
+    title: 'Sprints',
+    group: 'apps',
+    icon: 'keyboard_tab',
+    name: 'Sprints',
   },
 ];
 // reorder menu

@@ -7,7 +7,8 @@
           <v-divider></v-divider>
         </v-flex>
         <v-flex sm12 v-if="projectLoaded">
-          <product-backlog v-bind:userProject="userProject"></product-backlog>
+          <!--<product-backlog v-bind:userProject="userProject"></product-backlog>-->
+          <sprints v-bind:userProject="userProject"></sprints>
         </v-flex>
       </v-layout>
     </v-container>
@@ -16,10 +17,12 @@
 
 <script>
 import ProductBacklog from '@/components/widgets/ProductBacklog';
+import Sprints from '@/components/widgets/Sprints';
 import ProjectService from '@/api/projects';
 export default {
   components: {
     ProductBacklog,
+    Sprints
   },
   data: () => ({
     selectedTab: 'tab-1',  

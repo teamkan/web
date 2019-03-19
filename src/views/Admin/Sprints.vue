@@ -12,11 +12,9 @@
 
 <script>
 import ListSprints from '@/components/lists/admin/ListSprints';
-import Datepicker from 'vuejs-datepicker';
 export default {
   components: {
       ListSprints,
-      Datepicker
   },
   data: () => ({
     selectedTab: 'tab-1',

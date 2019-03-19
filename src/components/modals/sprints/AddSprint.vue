@@ -15,10 +15,52 @@
                             <v-text-field label="Sprint name" v-model="sprint.sprintname" required autocomplete="off"></v-text-field>
                         </v-flex>
                         <v-flex xs12>
-                            <v-text-field label="Start date" v-model="sprint.startdate" type="date" required autocomplete="new-password"></v-text-field>
+                          <v-menu ref="startMenu"
+                                  lazy
+                                  :close-on-content-click="false"
+                                  v-model="startMenu"
+                                  transition="scale-transition"
+                                  offset-y
+                                  full-width
+                                  :nudge-right="40"
+                                  min-width="290px"
+                                  :return-value.sync="sprint.startDate">
+                            <v-text-field slot="activator"
+                                          label="Start date"
+                                          v-model="sprint.startDate"
+                                          prepend-icon="event"
+                                          readonly>
+                              </v-text-field>
+                            <v-date-picker v-model="sprint.startDate" no-title scrollable>
+                              <v-spacer></v-spacer>
+                              <v-btn flat color="primary" @click="startMenu = false">Cancel</v-btn>
+                              <v-btn flat color="primary" @click="$refs.startMenu.save(sprint.startDate)">OK</v-btn>
+                            </v-date-picker>
+                          </v-menu>
                         </v-flex>
                         <v-flex xs12>
-                            <datepicker label="End date" v-model="sprint.enddate" name="end"></datepicker>
+                          <v-menu ref="endMenu"
+                                  lazy
+                                  :close-on-content-click="false"
+                                  v-model="endMenu"
+                                  transition="scale-transition"
+                                  offset-y
+                                  full-width
+                                  :nudge-right="40"
+                                  min-width="290px"
+                                  :return-value.sync="sprint.endDate">
+                            <v-text-field slot="activator"
+                                          label="End date"
+                                          v-model="sprint.endDate"
+                                          prepend-icon="event"
+                                          readonly>
+                              </v-text-field>
+                            <v-date-picker v-model="sprint.endDate" no-title scrollable>
+                              <v-spacer></v-spacer>
+                              <v-btn flat color="primary" @click="endMenu = false">Cancel</v-btn>
+                              <v-btn flat color="primary" @click="$refs.endMenu.save(sprint.endDate)">OK</v-btn>
+                            </v-date-picker>
+                          </v-menu>
                         </v-flex>
                         <v-flex xs12>
                             <v-text-field placeholder="Speed" v-model="sprint.speed" required autocomplete="off"></v-text-field>
@@ -51,7 +93,9 @@ export default {
       enddate: '',
       speed: '',
     },
-    loading: false
+    loading: false,
+    startMenu: false,
+    endMenu: false,
   }),
   methods: {
     save() {

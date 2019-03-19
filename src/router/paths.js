@@ -88,7 +88,7 @@ export default [
   {
     path: '/sprints',
     meta: { 
-      breadcrumb: true,
+      breadcrumb: false,
       requiresAuth: true 
     },
     name: 'Sprints',

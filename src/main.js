@@ -7,6 +7,11 @@ import "./registerServiceWorker";
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import 'font-awesome/css/font-awesome.css'
 import Axios from 'axios'
+import VueChartkick from 'vue-chartkick'
+import Chart from 'chart.js'
+
+Vue.use(VueChartkick, {adapter: Chart})
+
 
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('token')

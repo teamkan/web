@@ -30,7 +30,11 @@ export default {
       return this.$vuetify.options.extra.mainNav;
     },
     username() {
-      return JSON.parse(localStorage.getItem('user')).username
+      const user = JSON.parse(localStorage.getItem('user'));
+      if(user)
+        return user.username
+      
+      return '';
     }
   },
   methods: {

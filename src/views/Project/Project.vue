@@ -5,7 +5,9 @@
         <v-flex sm12>
           <h3>Project: {{ project.name}}</h3>
           <v-divider></v-divider>
-          <list-stories></list-stories>
+        </v-flex>
+        <v-flex sm12 v-if="projectLoaded">
+          <product-backlog v-bind:userProject="userProject"></product-backlog>
         </v-flex>
       </v-layout>
     </v-container>
@@ -13,15 +15,18 @@
 </template>
 
 <script>
-import ListStories from '@/components/lists/ListStories';
+import ProductBacklog from '@/components/widgets/ProductBacklog';
 import ProjectService from '@/api/projects';
 export default {
   components: {
-    ListStories,
+    ProductBacklog,
   },
   data: () => ({
     selectedTab: 'tab-1',  
-    project: Object
+    project: {},
+    userProject: {},
+    userId: JSON.parse(localStorage.getItem('user')).id,
+    projectLoaded: false
   }),
   computed: {
   },
@@ -30,17 +35,23 @@ export default {
     
     if(this.id != -1) {
       this.getProject();
+      this.getUserProject();
     }
   },
   methods: {
     getProject() {
       ProjectService.getProjectById(this.id)
         .then(project => {
-          console.log(project);
           this.project = project;
         })
+    },
+    getUserProject() {
+      ProjectService.getUserProject(this.userId, this.id)
+        .then(userProject => {
+          this.userProject = userProject;
+          this.projectLoaded = true;
+        });
     }
   }
-
 };
 </script>

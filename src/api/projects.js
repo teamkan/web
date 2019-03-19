@@ -40,6 +40,12 @@ export default {
         return resp.data.userProjects;
       });
   },
+  getUserProject(userId, projectId) {
+    return axios.get('projects/users/filter?userId=' + userId + '&projectId=' + projectId)
+      .then(resp => {
+        return resp.data.userProjects[0];
+      });
+  },
   getProjectById(projectId) {
     return axios.get('projects/filter?projectId=' + projectId)
       .then(resp => {

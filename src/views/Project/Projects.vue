@@ -3,7 +3,7 @@
     <v-container grid-list-xl fluid>
       <v-layout row wrap>
           <v-flex xs12>     
-              <list-projects></list-projects>
+              <list-user-projects></list-user-projects>
           </v-flex>
       </v-layout>
     </v-container>
@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import ListProjects from '@/components/lists/ListProjects';
+import ListUserProjects from '@/components/lists/ListUserProjects';
 export default {
   components: {
-    ListProjects,
+    ListUserProjects,
   },
   data: () => ({
     selectedTab: 'tab-1',  

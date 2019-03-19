@@ -8,7 +8,7 @@
     <v-card-text class="pa-0">
       <template>
         <v-data-table :headers="headers"
-                      :items="projects"
+                      :items="userProjects"
                       :pagination.sync="pagination"
                       class="elevation-0">
           <template slot="items" slot-scope="props">
@@ -16,18 +16,9 @@
             <td>{{ props.item.project.name }}</td>
             <td>{{ projectRole(props.item.roleId) }}</td>
             <td class="text-xs-right">
-                <edit-project v-bind:modal="getEditDialog(props.item.id)"
-                              icon="edit"
-                              v-bind:projectsName="props.item"
-                              v-bind:users="users"
-                              v-on:updated="$emit('refreshProject')">
-                </edit-project>
-                <!--<delete-project v-bind:modal="getDeleteDialog(props.item.id)"
-                              icon="delete"
-                              v-bind:sensorInput="props.item"
-                              v-bind:itemName="props.item.name"
-                              v-on:delete="$emit('onDelete')">
-                </delete-project>-->
+              <v-btn flat icon color="teal darken-2" @click.native="openProject(props.item.project.id)">
+                <v-icon>search</v-icon>
+              </v-btn>
             </td>
           </template>
         </v-data-table>
@@ -71,17 +62,12 @@ export default {
         },
         { text: 'Actions', value: 'action', align: 'right' },
       ],
-      projects: [],
-      users: [],
+      userProjects: [],
       roles: [],
-      editDialogs: [],
       pagination: {
         descending: false,
         rowsPerPage: 10,
         sortBy: 'id'
-      },
-      addDialog: {
-        dialog: false
       },
       userId: JSON.parse(localStorage.getItem('user')).id
     }
@@ -92,41 +78,17 @@ export default {
       this.getUserProjects();
   },
   methods: {
-      getProjects() {
-        ProjectService.getProjects()
-            .then(projects => {
-                this.projects = projects;
-            })
+      projectRole(role) {
+        const roleLbl = role == 'project_owner' ? 'Product owner' : role == 'scrum_master' ? 'Scrum master' : role == 'developer' ? 'Developer' : 'Standard';
+        return roleLbl;
       },
-      getUsers() {
-        UserService.getUsers()
-          .then(users => {
-            this.users = users;
-          });
+      openProject(projectId) {
+        this.$router.push({name: 'Project', params: {id: projectId}});
       },
-      getEditDialog(id){
-        return this.getDialogsById(this.editDialogs, id);
+      getUserProjects: function() {
+        ProjectService.getUserProjects(this.userId)
+          .then(projects => this.userProjects = projects);
       },
-      /*getDeleteDialog(id){
-        return this.getDialogsById(this.deleteDialogs, id);
-      },*/
-      getDialogsById(dialogs, id){
-        var project = this.projects.filter(function (project){
-          return project.id == id;
-        })[0];
-
-        var items = dialogs.filter(function (dialog){
-          return dialog.id == id;
-        });
-
-        if(items.length == 0){
-          var dialog = JSON.parse('{"id": "' + project.id+'", "dialog": {"dialog": false}}');
-          dialogs.push(dialog);
-        }else{
-          var dialog = items[0];
-        }
-        return dialog.dialog;
-      }
   }
 };
 </script>

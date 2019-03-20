@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="modal.dialog" persistent max-width="900px">
-    <v-btn flat icon color="green" slot="activator">
+    <v-btn flat icon color="blue" slot="activator" @click=init>
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
     <v-card>
@@ -20,7 +20,7 @@
                     <v-container grid-list-md>
                         <v-layout wrap>
                             <v-flex xs12>
-                            <v-text-field label="Project name" v-model="projectName" required autocomplete="off"></v-text-field>
+                            <v-text-field label="Project name" v-model="project.name" required autocomplete="off"></v-text-field>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -33,7 +33,7 @@
                                       :items="allUsers"
                                       chips
                                       tags
-                                      v-model="users"
+                                      v-model="selectedUsers"
                                       multi-line
                                       item-text="username"
                                       item-value="id"
@@ -100,8 +100,8 @@ export default {
     modal: Object,
     icon: String,
     roles: Array,
-    projectName: String,
-    users: Array
+    projectId: Number,
+    projectName: String
   },
   data () {
     return {
@@ -113,14 +113,15 @@ export default {
         roleId: -1,
       },
       project:{
-          name: projectName
+          id: -1,
+          name: ''
       },
       loading: false,
-      selectedUsers: users,
+      selectedUsers: [],
       allUsers: [],
       selectedProjectOwner: -1,
       selectedScrumMaster: -1,
-      selectedDeveloper: -1,
+      selectedDeveloper: -1
     }
   },
   created: function() {
@@ -128,6 +129,9 @@ export default {
       .then(users => {
         this.allUsers = users;
       });
+
+    this.step = 1;
+    
   },
   computed: {
     firstStep() {
@@ -165,24 +169,32 @@ export default {
     save() {
       let name = this.project.name;
 
-      //TODO shranjevanje
-
       if(name === '') {
         window.getApp.$emit('DISPLAY_SNACK', "All fields must be provided.", 'red');
         return;
       }
 
-      ProjectService.addProject({ 'name': name, })
-        .then(resp => {
-          this.clearFields();
-          step = 2;
+      ProjectService.updateProject(this.project)
+        .then(res => {
+          ProjectService.deleteUsersFromProject(this.projectId)
+            .then(res => {
+              this.selectedUsers.forEach(user => {
+              const _user = {
+                'projectId' : this.projectId,
+                'userId' : user.id,
+                'roleId' : user.id == this.selectedProjectOwner ? 'project_owner' : user.id == this.selectedScrumMaster ? 'scrum_master' : user.id == this.selectedDeveloper ? 'developer' : 'standard' 
+              }
 
-          this.$emit('added');
-          
-        })
-        .catch(err => {
+              ProjectService.assignUserToProject(_user)
+                .then(resp => {});
+              this.clearFields();
+              this.modal.dialog = false;
+              this.$emit('added');
+              });
+            });
+        }).catch(err => {
           window.getApp.$emit('DISPLAY_SNACK', err.response.data.msg, 'red');
-        }); 
+        });
     },
     close() {
       this.clearFields();
@@ -191,6 +203,7 @@ export default {
     clearFields() {
       this.project.name = '';
       this.selectedUsers = [];
+      this.step = 1;
     },
     nextStep() {
       if(this.project.name === '') {
@@ -203,6 +216,31 @@ export default {
     previousStep() {
       this.step = 1;
     },
+    init: function () {
+      this.project.id = this.$props.projectId;
+      this.project.name = this.$props.projectName;
+      this.selectedUsers = [];
+
+      ProjectService.getProjectUsers(this.project.id)
+      .then(users => {
+        users.forEach(u => {
+          this.selectedUsers.push(u.user);
+
+          switch (u.roleId) {
+            case 'project_owner':
+              this.selectedProjectOwner = u.user.id;
+              break;
+            case 'scrum_master':
+              this.selectedScrumMaster = u.user.id;
+              break;
+            case 'developer':
+              this.selectedDeveloper = u.user.id;
+              break;
+          }
+        });
+      });
+
+    }
   }
 };
 </script>

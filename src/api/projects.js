@@ -46,10 +46,28 @@ export default {
         return resp.data.userProjects[0];
       });
   },
+  getProjectUsers(projectId) {
+    return axios.get('projects/users/filter?projectId=' + projectId)
+      .then(resp => {
+        return resp.data.userProjects;
+      });
+  },
   getProjectById(projectId) {
     return axios.get('projects/filter?projectId=' + projectId)
       .then(resp => {
         return resp.data.projects[0];
       });
   },
+  deleteUsersFromProject(projectId) {
+    return axios.delete('projects/users?projectId=' + projectId)
+      .then(resp => {
+        return resp.data;
+      })
+  },
+  updateProject(project) {
+    return axios.put('projects', project)
+      .then(resp => {
+        return resp.data;
+      })
+  }
 }

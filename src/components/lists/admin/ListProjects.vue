@@ -20,9 +20,13 @@
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.name }}</td>
             <td class="text-xs-right">
-                <v-btn flat icon color="blue">
-                  <v-icon>edit</v-icon>
-                </v-btn>
+                <edit-project v-bind:modal="editDialog"
+                  icon="edit"
+                  v-bind:users="users"
+                  v-on:added="getProjects"
+                  v-bind:projectName="props.item.name"
+                  v-bind:projectId="props.item.id">
+                </edit-project>
                 <v-btn flat icon color="red">
                   <v-icon>delete</v-icon>
                 </v-btn>
@@ -39,10 +43,12 @@
 import ProjectService from '@/api/projects'
 import UserService from '@/api/users'
 import AddProject from '@/components/modals/projects/AddProject';
+import EditProject from '@/components/modals/projects/EditProject';
 import store from '@/store';
 export default {
   components: {
-    AddProject
+    AddProject,
+    EditProject
   },
   props: {
     
@@ -72,6 +78,9 @@ export default {
       addDialog: {
         dialog: false
       },
+      editDialog: {
+        dialog: false
+      }
     }
   },
   created: function() {

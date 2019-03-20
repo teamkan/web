@@ -11,12 +11,6 @@ const Menu =  [
     group: 'admin',
     icon: 'note',
     name: 'AdminProjects',
-    },
-  {
-    title: 'Sprints',
-    group: 'admin',
-    icon: 'directions_run',
-    name: 'AdminSprints',
   },
 ];
 // reorder menu

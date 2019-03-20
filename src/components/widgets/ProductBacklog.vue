@@ -1,7 +1,6 @@
 <template>
   <v-card>
     <v-toolbar card dense color="transparent">
-      <v-toolbar-title><h4>Product backlog</h4></v-toolbar-title>
       <v-spacer></v-spacer>
       <add-story v-if="canEdit"
                  v-bind:modal="addDialog"
@@ -10,7 +9,6 @@
                  icon="add">
         </add-story>
     </v-toolbar>
-    <v-divider></v-divider>
     <v-card-text class="pa-0">
       <template>
         <v-container grid-list-xl fluid>
@@ -38,6 +36,9 @@
                           <v-spacer></v-spacer>
                           <v-icon>
                             {{ getPriorityIcon(item.priority) }}
+                          </v-icon>
+                          <v-icon>
+                            {{ getStatusIcon(item) }}
                           </v-icon>
                         </v-card-title>
                         <v-card-text>
@@ -123,7 +124,8 @@ export default {
     ViewStory
   },
   props: {
-    userProject: Object
+    userProject: Object,
+    currentSprint: Object
   },
   data: function () {
     return {
@@ -149,11 +151,12 @@ export default {
       return this.userProject.projectId;
     },
     notAssigned: function() {
-      let notAssigned = this.stories.filter(s => s.status == 0);
-      return notAssigned;
+      return this.stories.filter(s => {
+        return s.status == 0 || (s.status == 1 && ((s.sprint && s.sprintId != this.currentSprint.id) || !s.sprint))
+      });
     },
     assigned: function() {
-      return this.stories.filter(s => s.status == 1);
+      return this.stories.filter(s => s.status == 1 && s.sprintId == this.currentSprint.id);
     },
     realized: function() {
       return this.stories.filter(s => s.status == 2);
@@ -167,6 +170,7 @@ export default {
       StoryService.getProjectStories(this.projectId)
         .then(stories => {
           this.stories = stories
+          console.log(stories)
         });
       
     },
@@ -183,6 +187,18 @@ export default {
         return 'filter_3'
       else if(priority == 'wont_have')
         return 'filter_4'
+    },
+    getStatusIcon: function(story) {
+      let currentDate = new Date();
+      if(story.status == 1 && story.sprint) {
+        let startDate = new Date(story.sprint.startdate);
+        let endDate = new Date(story.sprint.enddate);
+        if(currentDate.getTime() > endDate.getTime())
+          return 'warning'
+        if(currentDate.getTime() < startDate.getTime())
+          return 'check'
+      }
+      return '';
     }
   }
 };

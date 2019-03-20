@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="modal.dialog" persistent max-width="800px">
-        <v-btn flat icon color="green" slot="activator">
-            <v-icon>{{ icon }}</v-icon>
+        <v-btn outline color="green" slot="activator">
+          Add sprint
         </v-btn>
         <v-card>
             <v-card-title>
@@ -12,7 +12,7 @@
                 <v-container grid-list-md>
                     <v-layout wrap>
                         <v-flex xs12>
-                            <v-text-field label="Sprint name" v-model="sprint.sprintname" required autocomplete="off"></v-text-field>
+                            <v-text-field label="Sprint name" v-model="sprint.name" required autocomplete="off" @change="checkName"></v-text-field>
                         </v-flex>
                         <v-flex xs12>
                           <v-menu ref="startMenu"
@@ -63,7 +63,7 @@
                           </v-menu>
                         </v-flex>
                         <v-flex xs12>
-                            <v-text-field placeholder="Speed" v-model="sprint.speed" required autocomplete="off"></v-text-field>
+                            <v-text-field type="number" label="Velocity" v-model="sprint.velocity" required autocomplete="off"></v-text-field>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -85,44 +85,58 @@ export default {
     modal: Object,
     icon: String,
     roles: Array,
+    projectId: Number
   },
   data: () => ({
     sprint: {
-      sprintname: '',
-      startdate: '',
-      enddate: '',
-      speed: '',
+      name: '',
+      startDate: '',
+      endDate: '',
+      velocity: 0,
     },
     loading: false,
     startMenu: false,
     endMenu: false,
+    pass: true
   }),
   methods: {
-    save() {
-      this.loading = true;
-      let sprintname = this.sprint.sprintname;
-      let startdate = this.sprint.startdate;
-      let enddate = this.sprint.enddate;
-      let speed = this.sprint.speed;
+    async save() {
+      let name = this.sprint.name;
+      let startdate = this.sprint.startDate;
+      let enddate = this.sprint.endDate;
+      let velocity = this.sprint.velocity;
 
-      if (sprintname === '' || startdate === '' || enddate === '' || speed === '') {
+      if (name === '' || startdate === '' || enddate === '' || velocity === '') {
         window.getApp.$emit('DISPLAY_SNACK', "All fields must be provided.", 'red');
         return;
       }
-
-      if (enddate < startdate) {
-        window.getApp.$emit('DISPLAY_SNACK', "End date must be after start date.", 'red');
+      
+      if(!this.pass) {
+        window.getApp.$emit('DISPLAY_SNACK', "Sprint name must be unique for this project.", 'red');
         return;
       }
 
-      let sprint = {
-        'sprintname': sprintname,
-        'startdate': startdate,
-        'enddatte': enddate,
-        'speed': speed,
+      if (new Date(enddate).getTime() < new Date(startdate).getTime()) {
+        window.getApp.$emit('DISPLAY_SNACK', "Sprint can not finish before it starts.", 'red');
+        return;
       }
 
-      SprintService.createSprint(sprint)
+      const currentDate = new Date();
+      if (new Date(enddate).getTime() < currentDate.getTime() || new Date(startdate).getTime() < currentDate.getTime()) {
+        window.getApp.$emit('DISPLAY_SNACK', "Sprint can not be in the past.", 'red');
+        return;
+      }
+
+      this.loading = true;
+      let sprint = {
+        'name': name,
+        'startdate': startdate,
+        'enddate': enddate,
+        'velocity': velocity,
+        'projectId': this.projectId
+      }
+
+      SprintService.addSprint(sprint)
         .then(resp => {
           this.loading = false;
           this.clearFields();
@@ -141,10 +155,25 @@ export default {
       this.modal.dialog = false;
     },
     clearFields() {
-      this.sprint.sprintname = '';
-      this.sprint.startdate = '';
-      this.sprint.enddate = '';
-      this.sprint.speed = '';
+      this.sprint.name = '';
+      this.sprint.startDate = '';
+      this.sprint.endDate = '';
+      this.sprint.velocity = 0;
+      this.pass = false;
+    },
+    checkName: async function() {
+      await SprintService.getSprintByName(this.projectId, this.sprint.name) 
+        .then(sprints => {
+          console.log(sprints);
+          if(sprints.length > 0) {
+            window.getApp.$emit('DISPLAY_SNACK', "Sprint name must be unique for this project.", 'red');
+            this.pass = false;
+            return true;
+          }
+          else
+            this.pass = true;
+            return false;
+        });
     }
   }
 };
